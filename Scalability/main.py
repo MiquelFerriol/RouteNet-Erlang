@@ -55,7 +55,8 @@ model = GNN_Model(params)
 loss_object = tf.keras.losses.MeanAbsolutePercentageError()
 model.compile(loss=loss_object,
               optimizer=optimizer,
-              run_eagerly=False)
+              run_eagerly=False,
+              metrics = ['MAPE'])
 
 ckpt_dir = 'ckpt_dir'
 latest = tf.train.latest_checkpoint(ckpt_dir)
