@@ -71,6 +71,7 @@ if latest is not None:
             if len(reg) > 0:
                 mre = float(reg[0])
                 if mre <= best_mre:
+                    best = f.replace('.data-00000-of-00001', '')
                     best = f.replace('.index', '')
                     best_mre = mre
 
