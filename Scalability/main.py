@@ -43,7 +43,7 @@ ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
 ds_train = ds_train.repeat()
 ds_train = ds_train.shuffle(1000)
 
-ds_test = input_fn('../data/scalability/test/', min_scale=10, max_scale=11, shuffle=False)
+ds_test = input_fn('../data/scalability/test/300', min_scale=10, max_scale=11, shuffle=False)
 ds_test = ds_test.map(lambda x, y: transformation(x, y))
 ds_test = ds_test.prefetch(tf.data.experimental.AUTOTUNE)
 
@@ -93,7 +93,7 @@ model.fit(ds_train,
           epochs=200,
           steps_per_epoch=4000,
           validation_data=ds_test,
-          validation_steps=20,
+          validation_steps=5,
           callbacks=[cp_callback],
           batch_size=32,
           use_multiprocessing=True)
