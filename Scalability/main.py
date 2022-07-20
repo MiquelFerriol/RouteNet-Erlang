@@ -41,7 +41,7 @@ ds_train = input_fn('../data/scalability/train/', min_scale=min_scale, max_scale
 ds_train = ds_train.map(lambda x, y: transformation(x, y))
 ds_train = ds_train.prefetch(tf.data.experimental.AUTOTUNE)
 ds_train = ds_train.repeat()
-ds_train = ds_train.shuffle(1000)
+ds_train = ds_train.shuffle(100)
 
 ds_test = input_fn('../data/scalability/test/300', min_scale=10, max_scale=11, shuffle=False)
 ds_test = ds_test.map(lambda x, y: transformation(x, y))
@@ -55,7 +55,8 @@ model = GNN_Model(params)
 loss_object = tf.keras.losses.MeanAbsolutePercentageError()
 model.compile(loss=loss_object,
               optimizer=optimizer,
-              run_eagerly=False)
+              run_eagerly=False,
+              metrics = ['MAPE'])
 
 ckpt_dir = 'ckpt_dir'
 latest = tf.train.latest_checkpoint(ckpt_dir)
@@ -70,7 +71,8 @@ if latest is not None:
             if len(reg) > 0:
                 mre = float(reg[0])
                 if mre <= best_mre:
-                    best = f.replace('.index', '')
+                    best = f.replace('.data-00000-of-00001', '')
+                    best = best.replace('.index', '')
                     best_mre = mre
 
     print("BEST CHECKOINT FOUND: {}".format(best))
@@ -93,7 +95,7 @@ model.fit(ds_train,
           epochs=200,
           steps_per_epoch=4000,
           validation_data=ds_test,
-          validation_steps=20,
+          validation_steps=5,
           callbacks=[cp_callback],
           batch_size=32,
           use_multiprocessing=True)
